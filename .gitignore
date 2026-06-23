@@ -1,0 +1,4 @@
+# Keep the SkyLume project page assets, but do not publish the LaTeX source.
+/skylume/*
+!/skylume/images/
+!/skylume/images/**

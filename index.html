@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SkyLume is a large-scale real-world UAV dataset for urban scene reconstruction under varying illumination.">
+  <title>SkyLume | Aerial 3D Reconstruction Under Varying Illumination</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <nav class="topbar" aria-label="Primary navigation">
+    <a class="brand" href="#top">SkyLume</a>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#dataset">Dataset</a>
+      <a href="#benchmark">Benchmark</a>
+      <a href="#citation">Citation</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-copy">
+      <p class="eyebrow">Large-Scale Real-World UAV Dataset</p>
+      <h1>SkyLume</h1>
+      <p class="hero-title">Beyond a Single Light: A Large-Scale Aerial Dataset for Urban Scene Reconstruction Under Varying Illumination</p>
+      <p class="hero-summary">
+        SkyLume captures the same urban regions across morning, noon, and afternoon flights,
+        pairing 6K five-direction UAV imagery with LiDAR-derived geometry for robust 3D
+        reconstruction, novel view synthesis, and inverse rendering research.
+      </p>
+      <div class="hero-actions" aria-label="Project resources">
+        <a class="resource" href="https://arxiv.org/pdf/2512.14200" target="_blank" rel="noopener noreferrer">Paper</a>
+        <a class="resource" href="https://hkustgz-my.sharepoint.com/:f:/g/personal/zhuoxiaoli_hkust-gz_edu_cn/IgAihBYZA78eRb0p1sx1RAmQAcoLDVzUt8CIHf0Xoxa963M?e=7Q6zYg" target="_blank" rel="noopener noreferrer">Preview Dataset</a>
+        <span class="resource disabled" aria-disabled="true">Code coming soon</span>
+      </div>
+      <p class="resource-note">The OneDrive release (~ 1.5TB) is a preview dataset. The complete SkyLume dataset (~ 3TB) will be released on Hugging Face.</p>
+    </div>
+    <figure class="hero-media" aria-label="SkyLume teaser figure">
+      <img src="./skylume/images/teaser1.jpg" alt="SkyLume teaser showing LiDAR geometry, depth, UAV trajectories, and morning, noon, and dusk captures">
+    </figure>
+  </header>
+
+  <main>
+    <section class="stats-band" aria-label="Dataset highlights">
+      <div class="stat-item">
+        <span>10</span>
+        <p>Urban regions</p>
+      </div>
+      <div class="stat-item">
+        <span>109K+</span>
+        <p>UAV images</p>
+      </div>
+      <div class="stat-item">
+        <span>3</span>
+        <p>Illumination periods</p>
+      </div>
+      <div class="stat-item">
+        <span>6252 x 4168</span>
+        <p>Per-view resolution</p>
+      </div>
+      <div class="stat-item">
+        <span>LiDAR</span>
+        <p>Geometry ground truth</p>
+      </div>
+    </section>
+
+    <section class="section" id="overview">
+      <div class="section-kicker">Overview</div>
+      <h2>A benchmark for illumination-robust city-scale reconstruction.</h2>
+      <div class="two-column">
+        <div>
+          <p>
+            Existing aerial reconstruction pipelines often bake observed lighting into textures,
+            radiance fields, or Gaussians. SkyLume turns that nuisance into an explicit benchmark:
+            each scene is revisited along the same RTK-guided flight path at three times of day,
+            making cross-time robustness measurable rather than incidental.
+          </p>
+          <p>
+            The release is designed around geometry, appearance, and reproducibility. It provides
+            five synchronized views per capture, unified 6-DoF poses, LiDAR-guided meshes, per-frame
+            depth and normals, and solar geometry annotations for future de-shadowing, relighting,
+            and inverse-rendering studies.
+          </p>
+        </div>
+        <div class="feature-list">
+          <article class="feature">
+            <h3>Repeated illumination</h3>
+            <p>Morning, noon, and afternoon captures isolate lighting changes while keeping scene structure and viewpoints comparable.</p>
+          </article>
+          <article class="feature">
+            <h3>Survey-grade geometry</h3>
+            <p>LiDAR scans regularize weak-texture, shadowed, reflective, and water-adjacent regions during mesh construction.</p>
+          </article>
+          <article class="feature">
+            <h3>Cross-time metrics</h3>
+            <p>The Temporal Consistency Coefficient evaluates whether albedo and geometry remain stable across illumination periods.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="media-wide">
+      <figure class="wide-figure">
+        <img src="./skylume/images/pipeline.jpg" alt="SkyLume equipment, data collection, processing, and output pipeline">
+        <figcaption>
+          SkyLume combines a DJI M350 RTK, CHCNAV C30 five-direction aerial camera, and DJI L2 LiDAR. A unified SfM pipeline aligns three illumination periods and exports poses, depth, normals, meshes, and solar geometry.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="section-kicker">Dataset</div>
+      <h2>From repeatable UAV flights to aligned, multi-modal supervision.</h2>
+      <div class="trajectory-grid" aria-label="Aligned camera trajectory visualizations">
+        <figure>
+          <img src="./skylume/images/all.png" alt="Aligned camera trajectories from all three illumination periods">
+          <figcaption>Aligned trajectories from all three illumination periods.</figcaption>
+        </figure>
+        <figure>
+          <img src="./skylume/images/p0.png" alt="Single-period camera trajectory for Period 0 after alignment">
+          <figcaption>Single-period camera trajectory split for Period 0.</figcaption>
+        </figure>
+        <figure>
+          <img src="./skylume/images/p1.png" alt="Single-period camera trajectory for Period 1 after alignment">
+          <figcaption>Single-period camera trajectory split for Period 1.</figcaption>
+        </figure>
+        <figure>
+          <img src="./skylume/images/p2.png" alt="Single-period camera trajectory for Period 2 after alignment">
+          <figcaption>Single-period camera trajectory split for Period 2.</figcaption>
+        </figure>
+      </div>
+      <div class="data-grid">
+        <article class="data-card">
+          <h3>Capture protocol</h3>
+          <p>Each region is flown in three daily slots along the same trajectory, with 80% forward overlap, 60% side overlap, about 120 m flight height, and 1 Hz camera triggering.</p>
+        </article>
+        <article class="data-card">
+          <h3>Sensor stack</h3>
+          <p>The C30 camera records one nadir view and four oblique views at 26 MP per lens. The DJI L2 LiDAR provides centimeter-level metric support for geometry evaluation.</p>
+        </article>
+        <article class="data-card">
+          <h3>Released modalities</h3>
+          <p>SkyLume exports COLMAP-style SfM packages, per-period poses, mesh depth, LiDAR depth, mesh normals, post-processed meshes, and solar angles.</p>
+        </article>
+      </div>
+      <p class="dataset-release-note">
+        A preview dataset is available on
+        <a href="https://hkustgz-my.sharepoint.com/:f:/g/personal/zhuoxiaoli_hkust-gz_edu_cn/IgAihBYZA78eRb0p1sx1RAmQAcoLDVzUt8CIHf0Xoxa963M?e=7Q6zYg" target="_blank" rel="noopener noreferrer">OneDrive</a>.
+        The full dataset will be uploaded to Hugging Face.
+      </p>
+
+      <figure class="section-figure">
+        <img src="./skylume/images/statics.jpg" alt="Six representative SkyLume scenes and dataset statistics">
+        <figcaption>
+          Representative medium-scale scenes and dataset statistics: 10 scenes, 7.21 km<sup>2</sup>, three illumination periods, and more than 100,000 UAV images.
+        </figcaption>
+      </figure>
+
+      <div class="table-block">
+        <h3>Per-scene statistics</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Scale</th>
+                <th>Scene</th>
+                <th>Total images</th>
+                <th>Flight height</th>
+                <th>Density</th>
+                <th>Illumination setup</th>
+                <th>Water</th>
+                <th>Glass</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Small</td>
+                <td>Gym</td>
+                <td>6,185</td>
+                <td>120.366 m</td>
+                <td>Low</td>
+                <td>Sunlight / Sunlight / Overcast</td>
+                <td>No</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Small</td>
+                <td>Staff Residence</td>
+                <td>7,920</td>
+                <td>130.018 m</td>
+                <td>Medium</td>
+                <td>Sunlight / Partly cloudy / Overcast</td>
+                <td>Yes</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Small</td>
+                <td>iPark</td>
+                <td>5,355</td>
+                <td>115.241 m</td>
+                <td>Medium</td>
+                <td>Sunlight / Partly cloudy / Overcast</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>Tec School</td>
+                <td>7,185</td>
+                <td>108.481 m</td>
+                <td>Low</td>
+                <td>Sunlight / Sunlight / Sunlight</td>
+                <td>Yes</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>Buildings</td>
+                <td>10,455</td>
+                <td>129.891 m</td>
+                <td>High</td>
+                <td>Sunlight / Sunlight / Overcast</td>
+                <td>No</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>High School</td>
+                <td>10,065</td>
+                <td>108.015 m</td>
+                <td>Medium</td>
+                <td>Sunlight / Partly cloudy / Sunlight</td>
+                <td>Yes</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>Main Campus</td>
+                <td>10,410</td>
+                <td>130.280 m</td>
+                <td>Medium</td>
+                <td>Sunlight / Partly cloudy / Sunlight</td>
+                <td>No</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Large</td>
+                <td>Estate</td>
+                <td>18,630</td>
+                <td>109.024 m</td>
+                <td>High</td>
+                <td>Sunlight / Partly cloudy / Sunlight</td>
+                <td>No</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Large</td>
+                <td>Town</td>
+                <td>12,435</td>
+                <td>149.260 m</td>
+                <td>High</td>
+                <td>Sunlight / Partly cloudy / Overcast</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Large</td>
+                <td>Med School</td>
+                <td>20,700</td>
+                <td>119.250 m</td>
+                <td>Medium</td>
+                <td>Sunlight / Sunlight / Overcast</td>
+                <td>Yes</td>
+                <td>No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="gallery-grid">
+        <figure>
+          <img src="./skylume/images/lidarmesh.jpg" alt="LiDAR-guided ground-truth meshes for representative SkyLume scenes">
+          <figcaption>Post-processed LiDAR-guided meshes provide ground truth for representative medium-scale scenes.</figcaption>
+        </figure>
+        <figure>
+          <img src="./skylume/images/illum_changes.jpg" alt="Partly cloudy illumination causing inconsistent local lighting">
+          <figcaption>Partly cloudy flights create local lighting variation, testing whether methods overfit shadows and exposure drift.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section comparison-section">
+      <div class="section-kicker">Positioning</div>
+      <h2>SkyLume covers the axes missing from prior aerial datasets.</h2>
+      <div class="table-wrap">
+        <table class="compact-table">
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Real-world</th>
+              <th>LiDAR</th>
+              <th>Camera type</th>
+              <th>Light variation</th>
+              <th>Depth / normal</th>
+              <th>Resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ISPRS Benchmark</td>
+              <td>Yes</td>
+              <td>Terrestrial</td>
+              <td>Oblique</td>
+              <td>No</td>
+              <td>No</td>
+              <td>6000 x 4000</td>
+            </tr>
+            <tr>
+              <td>UrbanScene3D</td>
+              <td>Partial</td>
+              <td>Yes</td>
+              <td>Oblique</td>
+              <td>No</td>
+              <td>No</td>
+              <td>5490 x 3651</td>
+            </tr>
+            <tr>
+              <td>GauU-Scene</td>
+              <td>Yes</td>
+              <td>Yes</td>
+              <td>Oblique + Nadir</td>
+              <td>No</td>
+              <td>No</td>
+              <td>5468 x 3636</td>
+            </tr>
+            <tr>
+              <td>MatrixCity</td>
+              <td>No</td>
+              <td>From depth</td>
+              <td>Oblique + Nadir</td>
+              <td>Yes</td>
+              <td>Depth + normal</td>
+              <td>1920 x 1080</td>
+            </tr>
+            <tr class="ours-row">
+              <td>SkyLume</td>
+              <td>Yes</td>
+              <td>Yes</td>
+              <td>Oblique + Nadir</td>
+              <td>Yes</td>
+              <td>Depth + normal</td>
+              <td>6252 x 4168</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="benchmark">
+      <div class="section-kicker">Benchmark</div>
+      <h2>Evaluation tracks for appearance, geometry, and novel views.</h2>
+      <div class="benchmark-grid">
+        <article class="benchmark-card">
+          <h3>TCC-Albedo</h3>
+          <p>Inverse-rendering methods are evaluated by rendering albedo from matched viewpoints across three time slots.</p>
+          <strong>Best reported mean overall: 0.775</strong>
+        </article>
+        <article class="benchmark-card">
+          <h3>TCC-Geometry</h3>
+          <p>Meshes are compared to ground truth and against one another across illumination periods using F-1 consistency.</p>
+          <strong>Best F-1 at 0.5 m: 0.719</strong>
+        </article>
+        <article class="benchmark-card">
+          <h3>Novel View Synthesis</h3>
+          <p>NVS quality is reported with PSNR, SSIM, and LPIPS on six UAV scenes under challenging sunlit captures.</p>
+          <strong>Abs-GS is strongest overall</strong>
+        </article>
+      </div>
+
+      <figure class="section-figure">
+        <img src="./skylume/images/eval.png" alt="Temporal Consistency Coefficient evaluation protocol">
+        <figcaption>
+          TCC evaluates albedo and geometry by fixing viewpoints across periods and scoring cross-time consistency.
+        </figcaption>
+      </figure>
+
+      <div class="gallery-grid benchmark-gallery">
+        <figure>
+          <img src="./skylume/images/albedo3.jpg" alt="Albedo and TCC visualization across two illumination periods">
+          <figcaption>Inverse-rendering baselines retain time-dependent shadows and exposure changes in estimated albedo.</figcaption>
+        </figure>
+        <figure>
+          <img src="./skylume/images/nvs2.jpg" alt="Novel view synthesis qualitative comparisons on SkyLume scenes">
+          <figcaption>NVS baselines vary sharply in shadow-dominated and weak-texture aerial regions.</figcaption>
+        </figure>
+        <figure>
+          <img src="./skylume/images/crosstime.jpg" alt="Cross-time rendering and mesh comparison under different periods">
+          <figcaption>Strong lighting shifts introduce shadow-as-geometry artifacts and cross-view color inconsistencies.</figcaption>
+        </figure>
+      </div>
+
+      <div class="table-block">
+        <h3>Representative benchmark numbers</h3>
+        <div class="table-wrap">
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>Track</th>
+                <th>Method</th>
+                <th>Metric</th>
+                <th>Score</th>
+                <th>Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TCC-Albedo</td>
+                <td>GS-IR</td>
+                <td>Mean overall</td>
+                <td>0.721</td>
+                <td>Cross-time albedo consistency</td>
+              </tr>
+              <tr>
+                <td>TCC-Albedo</td>
+                <td>Ref-Gaussian</td>
+                <td>Mean overall</td>
+                <td>0.658</td>
+                <td>Cross-time albedo consistency</td>
+              </tr>
+              <tr class="ours-row">
+                <td>TCC-Albedo</td>
+                <td>Ref-GS</td>
+                <td>Mean overall</td>
+                <td>0.775</td>
+                <td>Best reported mean in the draft</td>
+              </tr>
+              <tr>
+                <td>TCC-Geometry</td>
+                <td>2DGS</td>
+                <td>F-1 at 0.5 m</td>
+                <td>0.675</td>
+                <td>Average pairwise consistency</td>
+              </tr>
+              <tr class="ours-row">
+                <td>TCC-Geometry</td>
+                <td>CityGaussianV2</td>
+                <td>F-1 at 0.5 m</td>
+                <td>0.719</td>
+                <td>Best reported geometry consistency</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section citation-section" id="citation">
+      <div class="section-kicker">Citation</div>
+      <h2>Cite SkyLume</h2>
+      <p class="citation-note"></p>
+      <pre><code>@misc{li2026singlelightlargescaleaerial,
+        title={Beyond a Single Light: A Large-Scale Aerial Dataset for Urban Scene Reconstruction Under Varying Illumination}, 
+        author={Zhuoxiao Li and Wenzong Ma and Taoyu Wu and Jinjing Zhu and Shuai Zhang and Jing OU and Tongyan Hua and Yinrui Ren and Rongjun Qin and Hui Xiong and Wufan Zhao},
+        year={2026},
+        eprint={2512.14200},
+        archivePrefix={arXiv},
+        primaryClass={cs.CV},
+        url={https://arxiv.org/abs/2512.14200}, 
+}</code></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>SkyLume project page. Built for static hosting with GitHub Pages.</p>
+  </footer>
+</body>
+</html>
